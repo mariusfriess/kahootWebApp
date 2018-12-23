@@ -1,0 +1,11 @@
+<h1>NILOOT</h1>
+<form (submit)="startGame($event, gameCode.value)" class="startGame">
+  <div class="inputWrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Game PIN</mat-label>
+      <input #gameCode autocomplete="off" type="number" matInput required>
+      <!--<mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+    </mat-form-field>
+  </div>
+  <button type="submit" color="primary" mat-stroked-button>Start Game</button>
+</form>
