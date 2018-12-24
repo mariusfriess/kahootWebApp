@@ -1,14 +1,82 @@
 let app = require('express')();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
+let mongoose = require('mongoose');
 
 const PORT = 5000;
-
-let connected = 0;
 
 http.listen(PORT, () => {
   console.log('Started on Port ' + PORT);
 });
+
+
+/***
+ * 
+ *  MONGO DB 
+ * 
+ ***/
+
+let Quiz = require('./schemas/quiz.schema');
+
+mongoose.connect('mongodb://localhost:27017/QuizDatabase', {useNewUrlParser: true});
+let db = mongoose.connection;
+db.once('open', () => {
+  console.log('QuizDatabase opened successfully')
+})
+db.on('error', console.error.bind(console, 'connection error:'))
+
+function findQuiz(name){
+  Quiz.findOne({name}).exec((err, quiz) => {
+    if(err){
+      console.error(err)
+      return false;
+    }else if(!quiz){
+      console.log('Quiz ' + name + ' not found.')
+      return false;
+    }else{
+      console.log('Quiz ' + name + ' found.')
+      return true;
+    }
+  })
+}
+
+function getQuiz(name){
+  Quiz.findOne({name}).exec((err, quiz) => {
+    if(err){
+      console.error(err)
+      return null;
+    }else if(!quiz){
+      console.log('Quiz ' + name + ' not found.')
+      return null;
+    }else{
+      console.log('Quiz ' + name + ' found.')
+      return quiz;
+    }
+  })
+}
+
+function createQuiz(name, answers){
+  db.collection('quizzes').insert({
+    name: name,
+    answesrs: answers
+  }, (err, quiz) => {
+    if(err){
+      console.error(err);
+      return null;
+    }else{
+      console.log('Quiz ' + name + ' created');
+      return quiz;
+    }
+  })
+}
+
+/***
+ * 
+ *  SOCKET IO
+ * 
+ ***/
+
+let connected = 0;
 
 io.on('connection', (socket) => {
   let room = 0;
