@@ -39,4 +39,40 @@ export class SocketService {
     })
   }
 
+  checkQuizName(name: string){
+    return new Promise((resolve, reject) => {
+      this.socket.emit('checkQuizName', {name});
+      this.socket.on('checkQuizNameRes', (data) => {
+        resolve(data)
+      })
+    })
+  }
+
+  createNewQuiz(quizName: string, questions: Array<any>){
+    return new Promise((resolve, reject) => {
+      this.socket.emit('createNewQuiz', {quizName, questions});
+      this.socket.on('createNewQuizRes', (data) => {
+        resolve(data.res)
+      })
+    })
+  }
+
+  searchForQuizzes(name: string){
+    return new Promise((resolve, reject) => {
+      this.socket.emit('searchForQuizzes', {name});
+      this.socket.on('searchForQuizzesRes', (data) => {
+        resolve(data.res)
+      })
+    })
+  }
+
+  getQuiz(quizName: string){
+    return new Promise((resolve, reject) => {
+      this.socket.emit('getQuiz', {quizName});
+      this.socket.on('getQuizRes', (data) => {
+        resolve(data.res)
+      })
+    })
+  }
+
 }

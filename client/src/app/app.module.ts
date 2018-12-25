@@ -12,15 +12,19 @@ import { MaterialModule } from './core/module/material.module';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketService } from './core/service/socket.service';
 import { CreateComponent } from './components/create/create.component';
+import { StartGameComponent } from './components/start-game/start-game.component';
+import { GameHostComponent } from './components/game-host/game-host.component';
 
-const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
+const config: SocketIoConfig = { url: 'http://192.168.178.39:5000', options: {} };
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     GameComponent,
-    CreateComponent
+    CreateComponent,
+    StartGameComponent,
+    GameHostComponent
   ],
   imports: [
     BrowserModule,

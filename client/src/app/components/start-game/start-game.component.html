@@ -1,0 +1,37 @@
+<h1>Start New Game</h1>
+<div class="box createQuiz">
+  <h2>Create new Quiz</h2>
+  <form (submit)="createNewQuiz($event, quizName.value)">
+    <mat-form-field class="createInput" hideRequiredMarker="true" appearance="outline">
+      <mat-label>Quiz Name</mat-label>
+      <input #quizName (keyup)="checkQuizName(quizName.value)" autocomplete="off" type="text" matInput required>
+      <mat-icon class="red" *ngIf="nameExisting == true" matSuffix>close</mat-icon>
+      <mat-icon class="green" *ngIf="nameExisting == false" matSuffix>check</mat-icon>
+    </mat-form-field>
+    <button class="createSubmit" type="submit" color="primary" mat-stroked-button>Create Quiz</button>
+  </form>
+</div> 
+<div class="box selectQuizBox">
+  <h2>Select existing Quiz</h2>
+  <div class="selectQuizWrapper">
+    <div class="searchQuizBox">
+      <mat-form-field class="searchQuiz" appearance="outline">
+        <mat-label>Search Quiz</mat-label>
+        <input #searchQuizNameInput (keyup)="searchQuizName(searchQuizNameInput.value)" autocomplete="off" type="text" matInput>
+      </mat-form-field>
+    </div>
+    <div class="selectQuiz" *ngFor="let quiz of quizzes; let i = index">
+      <div [class.expanded]="selectBoxExpand == i" matRipple (click)="selectBoxClicked(i)" class="selectHeader">
+        {{quiz.name}}
+      </div>
+      <div [class.expanded]="selectBoxExpand == i" class="selectExpand">
+        <button color="primary" mat-stroked-button>Start Game</button>
+        <button mat-stroked-button>Edit</button>
+        <button color="warn" mat-stroked-button>Delete</button>
+      </div>
+    </div>
+    <div *ngIf="quizzes.length == 0">
+      Loading Quizzes
+    </div>
+  </div>
+</div>

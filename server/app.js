@@ -25,50 +25,158 @@ db.once('open', () => {
 })
 db.on('error', console.error.bind(console, 'connection error:'))
 
-function findQuiz(name){
-  Quiz.findOne({name}).exec((err, quiz) => {
-    if(err){
-      console.error(err)
-      return false;
-    }else if(!quiz){
-      console.log('Quiz ' + name + ' not found.')
-      return false;
-    }else{
-      console.log('Quiz ' + name + ' found.')
-      return true;
-    }
+function findQuiz(name) {
+  console.log(name)
+  return new Promise((resolve, reject) => {
+    Quiz.findOne({name}).exec((err, quiz) => {
+      if(err){
+        console.error(err)
+        resolve(false);
+      }else if(!quiz){
+        console.log('Quiz ' + name + ' not found.')
+        resolve(false);
+      }else{
+        console.log('Quiz ' + name + ' found.')
+        resolve(true);
+      }
+    })
   })
 }
+
+// Only returns first 10
+function searchForQuizzes(name){
+  let regEx = new RegExp(name, 'i')
+  return new Promise((resolve, reject) => {
+    Quiz.find({name: regEx}, 'name', {limit: 10}, (err, quizzes) => {
+      if(err){
+        console.error(err)
+        resolve(null);
+      }else if(!quizzes){
+        resolve(null);
+      }else{
+        resolve(quizzes)
+      }
+    })
+  })
+}
+/*
+function searchForQuizzes(name){
+  let firstLetterRegEx = new RegExp('^' + name, 'i')
+  let similarWordRegEx = new RegExp(name, 'i')
+  let response = [];
+  let limit = 10;
+  return new Promise((resolve, reject) => {
+    Quiz.find({name: firstLetterRegEx}, 'name', {limit}, (err, quizzes) => {
+      if(err){
+        console.error(err)
+        resolve(null);
+      }else if(!quizzes){
+        resolve(null);
+      }else{
+        if(quizzes.length == 10){
+          resolve(quizzes);
+        }else{
+          response = quizzes;
+          limit -= quizzes.length;
+        }
+      }
+    })
+    Quiz.find({name: similarWordRegEx}, 'name', {limit}, (err, quizzes) => {
+      if(err){
+        console.error(err)
+        resolve(null);
+      }else if(!quizzes){
+        resolve(null);
+      }else{
+        response = {...response, quizzes}
+        resolve(response)
+      }
+    })
+  })
+}*/
 
 function getQuiz(name){
-  Quiz.findOne({name}).exec((err, quiz) => {
-    if(err){
-      console.error(err)
-      return null;
-    }else if(!quiz){
-      console.log('Quiz ' + name + ' not found.')
-      return null;
-    }else{
-      console.log('Quiz ' + name + ' found.')
-      return quiz;
-    }
+  return new Promise((resolve, reject) => {
+    Quiz.findOne({name}).exec((err, quiz) => {
+      if(err){
+        console.error(err)
+        resolve(null);
+      }else if(!quiz){
+        console.log('Quiz ' + name + ' not found.')
+        resolve(null);
+      }else{
+        console.log('Quiz ' + name + ' found.')
+        resolve(quiz);
+      }
+    })
   })
 }
 
-function createQuiz(name, answers){
-  db.collection('quizzes').insert({
-    name: name,
-    answesrs: answers
-  }, (err, quiz) => {
-    if(err){
-      console.error(err);
-      return null;
-    }else{
-      console.log('Quiz ' + name + ' created');
-      return quiz;
-    }
+function createQuiz(name, questions){
+  return new Promise((resolve, reject) => {
+    db.collection('quizzes').insertOne({
+      name: name,
+      questions: questions
+    }, (err, quiz) => {
+      if(err){
+        console.error(err);
+        resolve(false);
+      }else{
+        console.log('Quiz ' + name + ' created');
+        resolve(true);
+      }
+    })
   })
 }
+/*
+createQuiz("Super Quiz", [
+  {
+    title: "Question 1",
+    answers: [{
+      title: "Antwort die Erste",
+      isCorrect: false
+    },{
+      title: "Antwort die Zweite",
+      isCorrect: false
+    },{
+      title: "Antwort die Dritte",
+      isCorrect: false
+    },{
+      title: "Antwort die Richtige",
+      isCorrect: true
+    }]
+  },{
+    title: "Question 2",
+    answers: [{
+      title: "Antwort2 die Erste",
+      isCorrect: false
+    },{
+      title: "Antwort2 die Zweite",
+      isCorrect: false
+    },{
+      title: "Antwort2 die Dritte",
+      isCorrect: false
+    },{
+      title: "Antwort2 die Richtige",
+      isCorrect: true
+    }]
+  },{
+    title: "Question 3",
+    answers: [{
+      title: "Antwort3 die Erste",
+      isCorrect: false
+    },{
+      title: "Antwort3 die Zweite",
+      isCorrect: false
+    },{
+      title: "Antwort3 die Dritte Richtige",
+      isCorrect: true
+    },{
+      title: "Antwort3 die Richtige",
+      isCorrect: true
+    }]
+  }
+])*/
 
 /***
  * 
@@ -121,4 +229,25 @@ io.on('connection', (socket) => {
       socket.emit('findGameRes', {gameFound: false})
     }
   });
+
+  socket.on('checkQuizName', async (data) => {
+    let existing = await findQuiz(data.name);
+    console.log('Test' + existing)
+    socket.emit('checkQuizNameRes', {existing})
+  })
+
+  socket.on('searchForQuizzes', async (data) => {
+    let res = await searchForQuizzes(data.name)
+    socket.emit('searchForQuizzesRes', {res})
+  })
+
+  socket.on('createNewQuiz', async (data) => {
+    let res = await createQuiz(data.quizName, data.questions)
+    socket.emit('createNewQuizRes', {res})
+  })
+
+  socket.on('getQuiz', async (data) => {
+    let res = await getQuiz(data.quizName)
+    socket.emit('getQuizRes', {res})
+  })
 })

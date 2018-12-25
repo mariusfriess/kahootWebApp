@@ -4,23 +4,124 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  justify-content: flex-start;
+  height: calc(100% - 80px);
   width: 100%;
   background: $blue;
+  overflow: auto;
+  padding: 48px 0 32px;
 
   h1{
     color: white;
     font-weight: 300;
     font-size: 4em;
+    text-align: center;
     margin-top: 0;
+    width: 80%;
+
+    @include mobile{
+      font-size: 3em;
+    }
   }
 
-  .createGame{
-    display: flex;
-    flex-direction: column;
-    background: white;
-    padding: 22px 36px;
-    border-radius: 6px;
+  form{
+    width: 84%;
+
+    .box{
+      background: white;
+      border-radius: 6px;
+      width: calc(100% - 32px);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      min-height: min-content;
+      
+      &:not(:last-child){
+        margin-bottom: 32px;
+      }
+
+      h2{
+        font-size: 1.4em;
+        font-weight: 400;
+        color: $dark;
+        margin: 0 0 8px;
+      }
+
+      &.quizTitle{
+        .quizTitleInput{
+          width: 100%;
+          margin-bottom: -21px;
+
+          .red{
+            color: #FF4136;
+          }
+
+          .green{
+            color: #2ECC40;
+          }
+        }
+      }
+
+      &.quizQuestions{
+        .questionPanel{
+          width: 100%;
+          -webkit-tap-highlight-color: transparent;
+
+          .questionTitleInput{
+            width: 100%;
+            margin-bottom: -6px;
+          }
+
+          .questionAnswerWrapper{
+
+            > span{
+              margin: 4px 6px;
+
+              &.left{
+                float: left;
+              }
+    
+              &.right{
+                float: right;
+              }
+
+            }
+
+            .answerInput{
+              width: 100%;
+              margin-bottom: -16px;
+
+              .answerCorrect{
+                cursor: pointer;
+                user-select: none;
+
+                &.red{
+                  color: #FF4136;
+                }
+        
+                &.green{
+                  color: #2ECC40;
+                }
+              }
+            }
+          }
+        }
+
+        .actionBtns{
+          margin: 20px 0 0;
+          width: 100%;
+
+          .left{
+            float: left;
+          }
+    
+          .right{
+            float: right;
+          }
+        }
+      }
+    }
   }
 }

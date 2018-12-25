@@ -1,11 +1,48 @@
-<h1>Create New Game</h1>
-<form (submit)="createGame($event, gameCode.value)" class="createGame">
-  <div class="inputWrapper">
-    <mat-form-field appearance="outline">
-      <mat-label>Game PIN</mat-label>
-      <input #gameCode autocomplete="off" type="number" matInput required>
-      <!--<mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+<h1>Create New Quiz</h1>
+<form (submit)="createQuiz($event, quizName.value)">
+  <div class="box quizTitle">
+    <h2>Title</h2>
+    <mat-form-field class="quizTitleInput" hideRequiredMarker="true" appearance="outline">
+      <mat-label>Quiz Name</mat-label>
+      <input #quizName (keyup)="checkQuizName(quizName.value)" autocomplete="off" type="text" matInput required>
+      <mat-icon class="red" *ngIf="nameExisting == true" matSuffix>close</mat-icon>
+      <mat-icon class="green" *ngIf="nameExisting == false" matSuffix>check</mat-icon>
     </mat-form-field>
   </div>
-  <button type="submit" color="primary" mat-stroked-button>Create Game</button>
+  <div class="box quizQuestions">
+    <h2>Questions</h2>
+    <mat-expansion-panel *ngFor="let question of questions; let qi = index" class="questionPanel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Question {{qi + 1}}
+        </mat-panel-title>
+        <mat-panel-description *ngIf="question.correctAnswer.length == 0">
+          At least 1 answer needs to be correct
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+    
+      <mat-form-field class="questionTitleInput" hideRequiredMarker="true" appearance="outline">
+        <mat-label>Question</mat-label>
+        <input #questionTitle (keyup)="setQuestionTitle(qi, questionTitle.value)" value="{{question.title}}" autocomplete="off" type="text" matInput required>
+      </mat-form-field>
+
+      <div class="questionAnswerWrapper">
+        <span class="left">Answer Title</span>
+        <span class="right">Is Correct?</span>
+        <div *ngFor="let answer of question.answers; let ai = index">
+          <mat-form-field class="answerInput" hideRequiredMarker="true" appearance="outline">
+            <mat-label>Answer {{ai + 1}}</mat-label>
+            <input #answerTitle (keyup)="setAnswerTitle(qi, ai, answerTitle.value)" autocomplete="off" type="text" matInput required>
+            <mat-icon (click)="changeIsCorrect(qi, ai, true)" class="answerCorrect red" *ngIf="!answer.isCorrect" matSuffix>close</mat-icon>
+            <mat-icon (click)="changeIsCorrect(qi, ai, false)" class="answerCorrect green" *ngIf="answer.isCorrect" matSuffix>check</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>  
+    </mat-expansion-panel>
+
+    <div class="actionBtns">
+      <button type="button" class="addQuestion left" (click)="addQuestion()" mat-stroked-button>Add Question</button>
+      <button type="submit" class="createQuizBtn right" mat-stroked-button>Create Quiz</button>    
+    </div>
+  </div>
 </form>

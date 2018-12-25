@@ -14,6 +14,7 @@
     font-weight: 300;
     font-size: 4em;
     margin-top: 0;
+    text-align: center;
   }
 
   .startGame{
@@ -22,5 +23,21 @@
     background: white;
     padding: 22px 36px;
     border-radius: 6px;
+
+    .inputWrapper{
+      position: relative;
+
+      &.error{
+        animation: inputError .2s 4;
+      }
+    }
   }
+}
+
+@keyframes inputError{
+  0%{left: 0;}
+  25%{left: -10px;}
+  50%{left: 0;}
+  75%{left: 10px;}
+  100%{left: 0;}
 }

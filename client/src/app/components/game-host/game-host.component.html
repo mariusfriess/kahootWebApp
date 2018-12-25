@@ -1,0 +1,6 @@
+<div class="contentWrapper" *ngIf="quiz">
+  <h1>{{quiz.name}}</h1>
+</div>
+<div class="contentLoading" *ngIf="!quiz">
+    <mat-progress-spinner [color]="'accent'" [mode]="'indeterminate'"></mat-progress-spinner>
+</div>

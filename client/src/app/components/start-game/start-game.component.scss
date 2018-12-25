@@ -1,0 +1,138 @@
+@import 'vars';
+
+:host{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: calc(100% - 80px);
+  width: 100%;
+  background: $blue;
+  overflow: auto;
+  padding: 48px 0 32px;
+
+  h1{
+    color: white;
+    font-weight: 300;
+    font-size: 4em;
+    text-align: center;
+    margin-top: 0;
+    width: 80%;
+
+    @include mobile{
+      font-size: 3em;
+    }
+  }
+
+  .box{
+    background: white;
+    border-radius: 6px;
+    width: 80%;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: min-content;
+    
+    &:not(:last-child){
+      margin-bottom: 32px;
+    }
+
+    h2{
+      font-size: 1.4em;
+      font-weight: 400;
+      color: $dark;
+      margin: 0 0 8px;
+    }
+
+    &.createQuiz{
+
+      form{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        width: 100%;
+        
+        .createInput{
+          width: 100%;
+          margin-bottom: -16px;
+
+          .red{
+            color: #FF4136;
+          }
+
+          .green{
+            color: #2ECC40;
+          }
+        }
+      }
+    }
+
+    &.selectQuizBox{
+      .selectQuizWrapper{
+        width: 100%;
+
+        .searchQuizBox{
+          width: 100%;
+
+          .searchQuiz{
+            width: 100%;
+            margin-bottom: -16px;
+          }
+        }
+
+        .selectQuiz{
+          width: 100%;
+          overflow-y: hidden;
+
+          .selectHeader{
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 48px;
+            user-select: none;
+            cursor: pointer;
+            transition: background-color 120ms linear;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+
+            &:hover{
+              background-color: rgba(0,0,0,0.04);
+            }
+
+            &.expanded{
+              background-color: rgba(0,0,0,0.06);
+            }
+          }
+
+          .selectExpand{
+            max-height: 0;
+            height: 56px;
+            transition: max-height 180ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+
+            @include mobile{
+              justify-content: space-between;
+            }
+
+            &.expanded{
+              max-height: 56px;
+            }
+
+            button:not(:last-child){
+              margin-right: 16px;
+
+              @include mobile{
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

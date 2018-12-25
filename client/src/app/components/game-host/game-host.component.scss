@@ -1,0 +1,53 @@
+@import 'vars';
+
+:host{
+  background: $blue;
+  display: block;
+  height: 100%;
+
+  .contentLoading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .contentWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: calc(100% - 80px);
+    width: 100%;
+    background: $blue;
+    overflow: auto;
+    padding: 48px 0 32px;
+
+    h1{
+      color: white;
+      font-weight: 300;
+      font-size: 4em;
+      text-align: center;
+      margin-top: 0;
+      width: 80%;
+
+      @include mobile{
+        font-size: 3em;
+      }
+    }
+
+    .box{
+      background: white;
+      border-radius: 6px;
+      width: calc(100% - 32px);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      min-height: min-content;
+    }
+  }
+}
